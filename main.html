@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ygor Y Marketing</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #ca2e35; /* the whole background (the one behind everything) */
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            display: flex;
+            align-items: center;
+            padding: 15px 100px;
+            background-color: #ca2e35; /* color of the navigation bar */
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+        .navbar div:first-child {
+            margin-right: 500px; /* completely useless with the image */
+        }
+        .navbar div:last-child {
+            display: flex;
+            gap: 30px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 25px 30px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        .navbar a:hover {
+            opacity: 0.7;
+        }
+        .hero {
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 60px;
+            background: url('IMG_8367.jpg') no-repeat center 60%; /* Centers vertically */
+            background-size: cover; /* Ensures it fills the container */
+            background-attachment: fixed;
+            width: 100%;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0);
+            transition: opacity 0.3s ease;
+        }
+        .hero:hover {
+            opacity: 0.9;
+            background-color: rgba(202, 46, 53, 20);
+        }
+        .appointment-section {
+            height: 200px;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .appointment-button {
+            background-color: white;
+            color: black;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+        .appointment-button:hover {
+            background-color: #ecd556;
+            color: black;
+            opacity: 0.8;
+        }
+        .section {
+            padding: 100px 20px;
+            scroll-margin-top: 80px;
+            background-color: #ca2e35;
+        }
+        .section img {
+            width: 80%;
+            max-width: 600px;
+            height: auto;
+            margin-top: 20px;
+        }
+        .footer {
+            padding: 20px;
+            background-color: #231109;
+        }
+        ::selection {
+            background-color: rgba(142, 129, 61, 1); /* Dark Red background */
+            color: white; 
+        }
+        .wrapper {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="navbar">
+            <!--<div>logo</div>-->
+            <img src="logo.png" alt="Company Logo" style="height: 50px;">
+            <div>
+                <h2>Ygor Y Marketing</h2>
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#products">Products</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+        <div class="hero" id="home">
+            <!-- Ygor Y Marketing -->
+            <!--<img src="image01.jpg" alt="Imagename">-->
+        </div>
+        <div class="appointment-section">
+            <button class="appointment-button">Book an Appointment</button>
+        </div>
+        
+        <div class="section" id="about" style="display: flex; align-items: center; justify-content: flex-start; gap: 50px; flex-wrap: wrap;">
+            <img src="IMG_8359.JPG" alt="About Us Image" style="width: 700px; margin-left: 100px; border-radius: 10px;">
+            <div style="text-align: left; max-width: 500px;">
+                <h2>About Us</h2>
+                <p>Meet our core.</p>
+                <p>Strategy, design, and execution - this is the team behind the vision. Every brand has a story and we help you tell it right.</p>
+                <p>CEO, Ygor Soberano</p>
+                <p>CTO, Denis Mezentsev</p>
+                <p>COO, Prabesh Karki</p>
+            </div>
+        </div>
+
+        
+        <div class="section" id="services">
+            <h2>Our Services</h2>
+            <img src="placeholder.jpg" alt="Imagename">
+            <p>We offer haircuts, beard trims, shaves, and styling services tailored to your needs.</p>
+        </div>
+        
+        <div class="section" id="products">
+            <h2>Our Products</h2>
+            <img src="placeholder.jpg" alt="Imagename">
+            <p>Check out our premium hair and beard care products to maintain your style.</p>
+        </div>
+        
+        <div class="section" id="contact">
+            <h2>Contact Us</h2>
+            <img src="placeholder.jpg" alt="Imagename">
+            <p>Visit us at our location or contact us for more details about our services.</p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <!-- Left: Logo -->
+            <div style="flex: 1;">
+                <img src="logo.png" alt="Company Logo" style="height: 50px;">
+            </div>
+            <!-- Right: Navigation Links -->
+            <div style="flex: 1; text-align: right;">
+                <a href="#about" style="color: white; margin: 0 10px; text-decoration: none;">About Us</a>
+                <a href="#services" style="color: white; margin: 0 10px; text-decoration: none;">Our Services</a>
+                <a href="#products" style="color: white; margin: 0 10px; text-decoration: none;">Our Products</a>
+                <a href="#contact" style="color: white; margin: 0 10px; text-decoration: none;">Contact Us</a>
+            </div>
+        </div>
+        <p style="margin-top: 10px;">&copy; 2025 Ygor Y Marketing. All rights reserved.</p>
+    </div>
+</body>
+</html>
