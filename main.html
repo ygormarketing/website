@@ -94,7 +94,7 @@
         .section {
             padding: 100px 20px;
             scroll-margin-top: 80px;
-            background-color: #ca2e35;
+            background-color: black;
         }
         .section img {
             width: 80%;
@@ -104,17 +104,95 @@
         }
         .footer {
             padding: 20px;
-            background-color: #231109;
+            background-color: #ca2e35;
         }
         ::selection {
-            background-color: rgba(142, 129, 61, 1); /* Dark Red background */
+            background-color: rgba(142, 129, 61, 1); /* Dark yellow background */
             color: white; 
         }
         .wrapper {
             flex: 1;
         }
+        .team-heading {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .team-row {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        .team-member {
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .team-member:hover img {
+            transform: scale(1.08);
+        }
+        .team-member img {
+            width: 300px;
+            border-radius: 1%;
+            transition: transform 0.3s ease;
+        }
+        .team-member.ceo {
+            transform: translateY(-20px);
+        }
+        .team-member.ceo img {
+            width: 340px;
+        }
+        .service-boxes {
+          display: flex;
+          flex-direction: row;
+          gap: 40px;
+          align-items: center;
+        }
+        .service-box {
+          background-color: white;
+          color: black;
+          padding: 30px;
+          border-radius: 10px;
+          width: 80%;
+          max-width: 700px;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          opacity: 0;
+          transform: translateY(50px);
+          transition: all 1.6s ease-out;
+        }
+        .service-box.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
     </style>
 </head>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const boxes = document.querySelectorAll(".service-box");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add("visible");
+          }, index * 200); // delay each box
+        }
+      });
+    }, {
+      threshold: 0.3
+    });
+
+    boxes.forEach(box => observer.observe(box));
+  });
+</script>
+
+
+
+
+
+
 <body>
     <div class="wrapper">
         <div class="navbar">
@@ -123,8 +201,7 @@
             <div>
                 <h2>Ygor Y Marketing</h2>
                 <a href="#about">About</a>
-                <a href="#services">Services</a>
-                <a href="#products">Products</a>
+                <a href="#services-products">Services & Products</a>
                 <a href="#contact">Contact</a>
             </div>
         </div>
@@ -136,30 +213,80 @@
             <button class="appointment-button">Book an Appointment</button>
         </div>
         
-        <div class="section" id="about" style="display: flex; align-items: center; justify-content: flex-start; gap: 50px; flex-wrap: wrap;">
-            <img src="IMG_8359.JPG" alt="About Us Image" style="width: 700px; margin-left: 100px; border-radius: 10px;">
-            <div style="text-align: left; max-width: 500px;">
-                <h2>About Us</h2>
-                <p>Meet our core.</p>
-                <p>Strategy, design, and execution - this is the team behind the vision. Every brand has a story and we help you tell it right.</p>
-                <p>CEO, Ygor Soberano</p>
-                <p>CTO, Denis Mezentsev</p>
-                <p>COO, Prabesh Karki</p>
+        <div class="section" id="about" style="display: flex; flex-direction: column; align-items: center; gap: 40px;">
+
+    <!-- Team members section -->
+    <div class="section" id="team">
+    <div class="team-heading">OUR TEAM</div>
+    <div class="team-row">
+        <!-- COO -->
+        <div class="team-member">
+            <img src="karki.jpg" alt="Prabesh Karki">
+            <div style="margin-top: 20px;">
+                <strong>Prabesh Karki</strong><br>
+                <small>Content strategies and editor</small>
             </div>
         </div>
 
-        
-        <div class="section" id="services">
-            <h2>Our Services</h2>
-            <img src="placeholder.jpg" alt="Imagename">
-            <p>We offer haircuts, beard trims, shaves, and styling services tailored to your needs.</p>
+        <!-- CEO -->
+        <div class="team-member ceo">
+            <img src="ygor.jpg" alt="Ygor Soberano">
+            <div style="margin-top: 20px;">
+                <strong>Ygor Soberano</strong><br>
+                <small>CEO and founder</small>
+            </div>
         </div>
-        
-        <div class="section" id="products">
-            <h2>Our Products</h2>
-            <img src="placeholder.jpg" alt="Imagename">
-            <p>Check out our premium hair and beard care products to maintain your style.</p>
+
+        <!-- CTO -->
+        <div class="team-member">
+            <img src="denis.jpg" alt="Denis Mezentsev">
+            <div style="margin-top: 20px;">
+                <strong>Denis Mezentsev</strong><br>
+                <small>web and tech lead</small>
+            </div>
         </div>
+    </div>
+</div>
+
+
+<div class="section" id="services-products">
+  <h2 style="font-size: 3rem; margin-bottom: 40px;">SERVICES & PRODUCTS</h2>
+  <div class="service-boxes">
+    <div class="service-box hidden">
+      <h3>Website Design & Launch</h3>
+      <ul>
+        <li>Fully responsive website design</li>
+        <li>SEO-friendly setup</li>
+        <li>Smooth user experience (UX)</li>
+        <li>Personalized branding and layout</li>
+      </ul>
+    </div>
+    <div class="service-box hidden">
+      <h3>Social Media & Content Creation</h3>
+      <ul>
+        <li>Professional photoshoots and videos</li>
+        <li>Editing and social media formatting</li>
+        <li>Scheduled posting & content calendar setup</li>
+        <li>Branding consistency across platforms</li>
+      </ul>
+    </div>
+    <div class="service-box hidden">
+      <h3>Marketing Strategy & Advertising</h3>
+      <ul>
+        <li>Strategic business analysis</li>
+        <li>Influencer collaborations</li>
+        <li>Paid ad campaign setup (Meta, Google, TikTok, etc.)</li>
+        <li>Ongoing performance tracking and adjustments</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+    
         
         <div class="section" id="contact">
             <h2>Contact Us</h2>
