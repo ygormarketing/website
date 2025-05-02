@@ -8,6 +8,22 @@
         html {
             scroll-behavior: smooth;
         }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            will-change: transform, opacity;
+        }
+
+        header.hide-on-scroll {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
         body {
             background-color: #ca2e35; /* the whole background (the one behind everything) */
             color: white;
@@ -29,6 +45,7 @@
             top: 0;
             left: 0;
             z-index: 1000;
+            transition: transform 0.3s ease;
         }
         .navbar div:first-child {
             margin-right: 500px; /* completely useless with the image */
@@ -47,33 +64,37 @@
         .navbar a:hover {
             opacity: 0.7;
         }
+        .hide-on-scroll {
+          transform: translateY(-100%);
+          transition: transform 1s ease;
+        }
         .hero {
-            height: 600px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            position: relative; /* allow absolute children */
+            height: 700px;
+            margin-top: 60px;
+            color: white;
             font-size: 2rem;
             font-weight: bold;
-            margin-top: 60px;
-            background: url('IMG_8367.jpg') no-repeat center 60%; /* Centers vertically */
-            background-size: cover; /* Ensures it fills the container */
+            background: url('IMG_8367.jpg') no-repeat center 60%;
+            background-size: cover;
             background-attachment: fixed;
             width: 100%;
-            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0);
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.8); /* visible shadow */
             transition: opacity 0.3s ease;
         }
+
         .hero:hover {
             opacity: 0.9;
-            background-color: rgba(202, 46, 53, 20);
+            background-color: rgba(202, 46, 53, 0.2); /* transparency fix */
         }
-        .appointment-section {
-            height: 200px;
-            background-color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+        .hero-content {
+            position: absolute;
+            left: 50px; /* adjust as needed */
+            bottom: 40px; /* or use 'top' if placing higher */
+            text-align: left;
         }
+
         .appointment-button {
             background-color: white;
             color: black;
@@ -85,12 +106,42 @@
             font-weight: bold;
             transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
             opacity: 1;
+            margin-top: 20px;
         }
+
         .appointment-button:hover {
             background-color: #ecd556;
             color: black;
             opacity: 0.8;
         }
+
+        .transition-wrapper {
+            background-color: black;
+            padding: 0;
+        }
+
+        .transition-white {
+            background-color: black;
+            color: white;
+            padding: 120px 20px 80px;
+            text-align: center;
+            transition: font-size 0.3s ease-out;
+            will-change: font-size;
+        }
+
+        .transition-white h1.quote-text {
+            font-size: 3rem; 
+            font-weight: bold;
+            transition: font-size 0.3s ease-out;
+            margin-bottom: 20px;
+        }
+
+        .transition-white p {
+            font-size: 1.2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
         .section {
             padding: 100px 20px;
             scroll-margin-top: 80px;
@@ -143,49 +194,109 @@
         .team-member.ceo img {
             width: 340px;
         }
+        /* Wrapper for blurred background */
+        .services-background {
+          position: relative;
+          padding: 60px 20px;
+          border-radius: 20px;
+          overflow: hidden;
+        }
+
+        .services-background::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          /* background: url('ygor-service.jpg') center center / cover no-repeat; */
+          filter: blur(20px);
+          opacity: 0.5;
+          z-index: 0;
+        }
+
+
+        /* Bring service-boxes to front */
         .service-boxes {
           display: flex;
           flex-direction: row;
-          gap: 40px;
-          align-items: center;
+          gap: 20px;
+          align-items: stretch;
+          justify-content: center;
+          position: relative;
+          z-index: 1;
+          flex-wrap: wrap;
         }
+
+        /* Each box */
         .service-box {
-          background-color: white;
+          background-color: rgba(255, 255, 255, 0.9);
           color: black;
           padding: 30px;
           border-radius: 10px;
-          width: 80%;
-          max-width: 700px;
+          width: 100%;
+          max-width: 300px;
           box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
           opacity: 0;
           transform: translateY(50px);
           transition: all 1.6s ease-out;
+          text-align: center;
         }
+
+        .service-box li {
+            margin-bottom: 20px; /* adjust this value for more or less space */
+            text-align: left;
+        }
+
+        /* Scroll-in animation */
         .service-box.visible {
           opacity: 1;
           transform: translateY(0);
         }
+
+        /* Icons */
+        .service-box .icon {
+          width: 40px;
+          height: 40px;
+          margin-bottom: 15px;
+        }
     </style>
 </head>
 
+
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const boxes = document.querySelectorAll(".service-box");
+document.addEventListener("DOMContentLoaded", () => {
+  const boxes = document.querySelectorAll(".service-box");
+  const hero = document.querySelector('.hero');
+  const navbar = document.querySelector('.navbar'); // changed from header
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, index) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => {
-            entry.target.classList.add("visible");
-          }, index * 200); // delay each box
-        }
-      });
-    }, {
-      threshold: 0.3
+  // Reveal service boxes on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add("visible");
+        }, index * 200);
+      }
     });
-
-    boxes.forEach(box => observer.observe(box));
+  }, {
+    threshold: 0.3
   });
+
+  boxes.forEach(box => observer.observe(box));
+
+  // Animate quote text size
+  window.addEventListener('scroll', () => {
+    const quote = document.querySelector('.quote-text');
+    const section = document.querySelector('.transition-white');
+    const rect = section.getBoundingClientRect();
+
+    if (rect.top >= 0 && rect.top <= window.innerHeight) {
+      const progress = 1 - rect.top / window.innerHeight;
+      const minSize = 1.2;
+      const maxSize = 2.5;
+      const newSize = minSize + (maxSize - minSize) * progress;
+      quote.style.fontSize = `${newSize}rem`;
+    }
+  });
+});
 </script>
 
 
@@ -206,18 +317,86 @@
             </div>
         </div>
         <div class="hero" id="home">
-            <!-- Ygor Y Marketing -->
-            <!--<img src="image01.jpg" alt="Imagename">-->
+            <div class="hero-content">
+                <h3>We grow businesses – one step at a time</h3>
+                <button class="appointment-button">Book your free Consultation</button>
+            </div>
         </div>
-        <div class="appointment-section">
-            <button class="appointment-button">Book an Appointment</button>
+
+        <div class="transition-wrapper">
+            <div class="transition-white">
+                <h1 class="quote-text">"We started small – but we plan to end big."</h1>
+                <p>Every project we take on is an opportunity toward something bigger – for you and for us.</p>
+            </div>
         </div>
+
+
+<div class="section" id="services-products">
+  <h2 style="font-size: 3rem; margin-bottom: 40px;">OUR SERVICES</h2>
+  
+  <div class="services-background">
+    <div class="service-boxes">
+      <div class="service-box hidden">
+        <img class="icon" src="icons/web.svg" alt="Web Design Icon">
+        <h3 style="font-size: 1.4rem;">Website Design & <br>Launch</h3>
+        <ul>
+          <li>Fully responsive website design</li>
+          <li>SEO-friendly setup</li>
+          <li>Smooth user experience (UX)</li>
+          <li>Personalized branding and layout</li>
+        </ul>
+      </div>
+
+      <div class="service-box hidden">
+        <img class="icon" src="icons/media.svg" alt="Social Media Icon">
+        <h3 style="font-size: 1.4rem;">Social Media & <br>Content Creation</h3>
+        <ul>
+          <li>Professional photoshoots and videos</li>
+          <li>Editing and social media formatting</li>
+          <li>Scheduled posting & content calendar setup</li>
+          <li>Branding consistency across platforms</li>
+        </ul>
+      </div>
+
+      <div class="service-box hidden">
+        <img class="icon" src="icons/marketing.svg" alt="Marketing Icon">
+        <h3 style="font-size: 1.4rem;">Marketing Strategy & <br>Advertising</h3>
+        <ul>
+          <li>Strategic business analysis</li>
+          <li>Influencer collaborations</li>
+          <li>Paid ad campaign setup (Meta, Google, TikTok, etc.)</li>
+          <li>Ongoing performance tracking and adjustments</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="section" id="about-ygor" style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
+
+  <!-- Text Column -->
+  <div style="flex: 1; min-width: 280px; max-width: 600px;">
+    <h2 style="margin-bottom: 15px; font-size: 2rem;">Hi, I am Ygor</h2>
+    <p>
+      Bla bla bla ... <br> ... <br> ... <br> ... <br> ...
+    </p>
+    <button class="appointment-button">Book your free Consultation</button>
+  </div>
+
+  <!-- Image Column -->
+  <div style="flex: 1; min-width: 280px; max-width: 600px; display: flex; justify-content: center;">
+    <img src="ygor_main.jpg" alt="Ygor Soberano" style="width: 100%; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 400px; object-fit: cover;">
+  </div>
+
+</div>
+
         
         <div class="section" id="about" style="display: flex; flex-direction: column; align-items: center; gap: 40px;">
 
     <!-- Team members section -->
     <div class="section" id="team">
-    <div class="team-heading">OUR TEAM</div>
+    <div class="team-heading">MEET OUR TEAM</div>
     <div class="team-row">
         <!-- COO -->
         <div class="team-member">
@@ -249,67 +428,52 @@
 </div>
 
 
-<div class="section" id="services-products">
-  <h2 style="font-size: 3rem; margin-bottom: 40px;">SERVICES & PRODUCTS</h2>
-  <div class="service-boxes">
-    <div class="service-box hidden">
-      <h3>Website Design & Launch</h3>
-      <ul>
-        <li>Fully responsive website design</li>
-        <li>SEO-friendly setup</li>
-        <li>Smooth user experience (UX)</li>
-        <li>Personalized branding and layout</li>
-      </ul>
+    
+<div class="footer">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <!-- Left: Logo -->
+        <div style="flex: 1;">
+            <img src="logo.png" alt="Company Logo" style="height: 50px;">
+        </div>
+        <!-- Right: Navigation Links -->
+        <div style="flex: 1; text-align: right;">
+            <a href="#about" style="color: white; margin: 0 10px; text-decoration: none;">About Us</a>
+            <a href="#services" style="color: white; margin: 0 10px; text-decoration: none;">Our Services</a>
+            <a href="#products" style="color: white; margin: 0 10px; text-decoration: none;">Our Products</a>
+            <a href="#contact" style="color: white; margin: 0 10px; text-decoration: none;">Contact Us</a>
+        </div>
     </div>
-    <div class="service-box hidden">
-      <h3>Social Media & Content Creation</h3>
-      <ul>
-        <li>Professional photoshoots and videos</li>
-        <li>Editing and social media formatting</li>
-        <li>Scheduled posting & content calendar setup</li>
-        <li>Branding consistency across platforms</li>
-      </ul>
-    </div>
-    <div class="service-box hidden">
-      <h3>Marketing Strategy & Advertising</h3>
-      <ul>
-        <li>Strategic business analysis</li>
-        <li>Influencer collaborations</li>
-        <li>Paid ad campaign setup (Meta, Google, TikTok, etc.)</li>
-        <li>Ongoing performance tracking and adjustments</li>
-      </ul>
-    </div>
-  </div>
+    <p style="margin-top: 10px;">&copy; 2025 Ygor Y Marketing. All rights reserved.</p>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const hero = document.querySelector('.hero');
+  const navbar = document.querySelector('.navbar');
+  let lastScrollY = window.scrollY;
 
+  function isPastHero() {
+    const heroBottom = hero.getBoundingClientRect().bottom;
+    return heroBottom <= 0;
+  }
 
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
 
+    if (isPastHero()) {
+      if (currentScrollY > lastScrollY) {
+        navbar.classList.add('hide-on-scroll'); // scrolling down
+      } else {
+        navbar.classList.remove('hide-on-scroll'); // scrolling up
+      }
+    } else {
+      navbar.classList.remove('hide-on-scroll'); // always show when in hero
+    }
 
-    
-        
-        <div class="section" id="contact">
-            <h2>Contact Us</h2>
-            <img src="placeholder.jpg" alt="Imagename">
-            <p>Visit us at our location or contact us for more details about our services.</p>
-        </div>
-    </div>
-    
-    <div class="footer">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-            <!-- Left: Logo -->
-            <div style="flex: 1;">
-                <img src="logo.png" alt="Company Logo" style="height: 50px;">
-            </div>
-            <!-- Right: Navigation Links -->
-            <div style="flex: 1; text-align: right;">
-                <a href="#about" style="color: white; margin: 0 10px; text-decoration: none;">About Us</a>
-                <a href="#services" style="color: white; margin: 0 10px; text-decoration: none;">Our Services</a>
-                <a href="#products" style="color: white; margin: 0 10px; text-decoration: none;">Our Products</a>
-                <a href="#contact" style="color: white; margin: 0 10px; text-decoration: none;">Contact Us</a>
-            </div>
-        </div>
-        <p style="margin-top: 10px;">&copy; 2025 Ygor Y Marketing. All rights reserved.</p>
-    </div>
+    lastScrollY = currentScrollY;
+  });
+});
+</script>
+
 </body>
 </html>
